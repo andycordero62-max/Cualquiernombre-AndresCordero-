@@ -2,7 +2,9 @@ package com.wintux.skibidisigmaponmi.Controller;
 
 import com.wintux.skibidisigmaponmi.Tools.Calculadora;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Queue;
@@ -16,22 +18,21 @@ public class CalculadoraController {
         return "Calculadora Infix funcionando";
     }
 
-    @GetMapping("/expresion")
-    public String calcularInfix(
-            @RequestParam String infix
-    ) {
+    @PostMapping("/expresion")
+public String calcularInfix(@RequestBody ExpresionRequest request) {
+    
+    String infix = request.infix(); 
 
-        Queue<String> postfix =
-                Calculadora.convertirAPostfix(infix);
+    Queue<String> postfix = Calculadora.convertirAPostfix(infix);
 
-        Queue<String> postfixResolver =
-                Calculadora.convertirAPostfix(infix);
+    Queue<String> copiaParaResolver = new java.util.LinkedList<>(postfix);
 
-        double resultadocausa =
-                Calculadora.resolverExpresionPostfix(postfixResolver);
+    double resultadocausa = Calculadora.resolverExpresionPostfix(copiaParaResolver);
 
-        return "Infix: " + infix +
-                "\nPostfix: " + postfix +
-                "\nResultado: " + resultadocausa;
-    }
+    return "Infix: " + infix + 
+            "Postfix: " + postfix + 
+            "Resultado: " + resultadocausa;
+}
+
+
 }
